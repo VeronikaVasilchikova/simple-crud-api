@@ -29,6 +29,4 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(PORT, HOST, (error) => {
-  error ? console.log(error) : console.log(`listening port ${PORT}`);
-});
+module.exports = server;

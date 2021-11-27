@@ -11,7 +11,7 @@ const params = new RegExp(PARAMS_RULES);
  */
 const writeDataToFile = (filename, data) => {
   let dirName;
-  if (process.argv[2] === 'development') {
+  if (process.argv[2] === 'development' || global.__DEV__) {
     const distNameArray = __dirname.split('\\');
     distNameArray.pop();
     dirName = distNameArray.join('\\');
