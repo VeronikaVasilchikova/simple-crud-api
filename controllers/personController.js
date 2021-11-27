@@ -2,6 +2,7 @@ const Person = require('../models/personModel');
 const { getPostData,
   handleServerError,
   handleClientError,
+  filterNecessaryProperties,
   checkRequiredProperties,
   checkPropertiesTypes } = require('../utils.js');
 
@@ -24,7 +25,8 @@ const getPerson = async (req, res, id) => {
       res.end(JSON.stringify(person));
     }
     else {
-      handleClientError(res, id);
+      const errorMessage = `Sorry, person with id=${id} not found`;
+      handleClientError(404, res, errorMessage);
     }
   }
   catch(error) {
@@ -37,20 +39,17 @@ const createPerson = async (req, res) => {
     const body = await getPostData(req);
     const parsedBody = JSON.parse(body);
     const { name, age, hobbies } = parsedBody;
-    const checkRequiredProps = checkRequiredProperties(parsedBody);
+    const filteredBody = filterNecessaryProperties(parsedBody);
+    const checkRequiredProps = checkRequiredProperties(filteredBody);
     if (typeof checkRequiredProps === 'string') {
-      res.writeHead(404, 'Content-Type', 'application/json');
-      return res.end(JSON.stringify({
-        message: `Sorry, you missed required properties: ${checkRequiredProps}`
-      }));
+      const errorMessage = `Sorry, you missed required properties: ${checkRequiredProps}`;
+      handleClientError(400, res, errorMessage);
     }
     if (checkRequiredProps) {
-      const propertiesTypes = checkPropertiesTypes(parsedBody);
+      const propertiesTypes = checkPropertiesTypes(filteredBody);
       if (typeof propertiesTypes === 'string') {
-        res.writeHead(404, 'Content-Type', 'application/json');
-        return res.end(JSON.stringify({
-          message: `Sorry but ${propertiesTypes}`
-        }));
+        const errorMessage = `Sorry but ${propertiesTypes}`;
+        handleClientError(400, res, errorMessage);
       }
       else {
         const person = {
@@ -73,19 +72,29 @@ const updatePerson = async (req, res, id) => {
   try {
     const person = await Person.findById(id);
     if (!person) {
-      handleClientError(res, id);
+      const errorMessage = `Sorry, person with id=${id} not found`;
+      handleClientError(404, res, errorMessage);
     }
     else {
       const body = await getPostData(req);
-      const { name, age, hobbies } = JSON.parse(body);
-      const personDataToUpdate = {
-        name: name || person.name,
-        age: age || person.age,
-        hobbies: hobbies || person.hobbies
-      };
-      const personToUpdate = await Person.update(personDataToUpdate, id);
-      res.writeHead(201, 'Content-Type', 'application/json');
-      return res.end(JSON.stringify(personToUpdate));
+      const parsedBody = JSON.parse(body);
+      const filteredBody = filterNecessaryProperties(parsedBody);
+      const propertiesTypes = checkPropertiesTypes(filteredBody);
+      if (typeof propertiesTypes === 'string') {
+        const errorMessage = `Sorry but ${propertiesTypes}`;
+        handleClientError(400, res, errorMessage);
+      }
+      else {
+        const { name, age, hobbies } = filteredBody;
+        const personDataToUpdate = {
+          name: name || person.name,
+          age: age || person.age,
+          hobbies: hobbies || person.hobbies
+        };
+        const personToUpdate = await Person.update(personDataToUpdate, id);
+        res.writeHead(201, 'Content-Type', 'application/json');
+        return res.end(JSON.stringify(personToUpdate));
+      }
     }
   }
   catch(error) {
@@ -102,7 +111,8 @@ const removePerson = async (req, res, id) => {
       res.end(JSON.stringify({message: `Person with id ${id} has been removed successfully!`}));
     }
     else {
-      handleClientError(res, id);
+      const errorMessage = `Sorry, person with id=${id} not found`;
+      handleClientError(404, res, errorMessage);
     }
   }
   catch(error) {

@@ -9,7 +9,6 @@ const {
 } = require('./controllers/personController');
 const { PARAMS_RULES } = require('./constants');
 
-
 const { PORT = 3000, HOST = 'localhost'} = process.env;
 
 const server = http.createServer((req, res) => {
@@ -37,7 +36,7 @@ const server = http.createServer((req, res) => {
   }
   else {
     res.writeHead(404, 'Content-Type', 'application/json');
-    res.end(JSON.stringify({message: `Sorry, the route ${req.url} not found`}));
+    res.end(JSON.stringify({message: `Sorry, requested route ${req.url} not found`}));
   }
 
 });

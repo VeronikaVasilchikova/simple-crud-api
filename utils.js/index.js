@@ -36,9 +36,19 @@ const handleServerError = (res, error) => {
   res.end(JSON.stringify({message: error.message}));
 };
 
-const handleClientError = (res, id) => {
+const handleClientError = (statusCode, res, errorMessage) => {
   res.writeHead(404, 'Content-Type', 'application/json');
-  res.end(JSON.stringify({message: `Sorry, person with id=${id} not found`}));
+  res.end(JSON.stringify({message: errorMessage}));
+};
+
+const filterNecessaryProperties = (body) => {
+  const requiredPropNames = Object.keys(REQUIRED_PROPERTIES);
+  return Object.keys(body).reduce((acc, item) => {
+    if (requiredPropNames.includes(item)) {
+      acc[item] = body[item];
+    }
+    return acc;
+  }, {});
 };
 
 const checkRequiredProperties = (body) => {
@@ -112,6 +122,7 @@ module.exports = {
   getPostData,
   handleServerError,
   handleClientError,
+  filterNecessaryProperties,
   checkRequiredProperties,
   checkPropertiesTypes
 };
