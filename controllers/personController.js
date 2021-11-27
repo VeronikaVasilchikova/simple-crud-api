@@ -6,6 +6,12 @@ const { getPostData,
   checkRequiredProperties,
   checkPropertiesTypes } = require('../utils.js');
 
+/**
+ * Get list of exisiting persons
+ * @param {any} req
+ * @param {any} res
+ * @returns {void}
+ */
 const getPersons = async (req, res) => {
   try {
     const persons = await Person.findAll();
@@ -17,6 +23,13 @@ const getPersons = async (req, res) => {
   }
 };
 
+/**
+ * Get info about an exisiting person by id
+ * @param {any} req
+ * @param {any} res
+ * @param {string | number} id
+ * @returns {void}
+ */
 const getPerson = async (req, res, id) => {
   try {
     const person = await Person.findById(id);
@@ -34,6 +47,12 @@ const getPerson = async (req, res, id) => {
   }
 };
 
+/**
+ * Create a new person
+ * @param {any} req
+ * @param {any} res
+ * @returns {void}
+ */
 const createPerson = async (req, res) => {
   try {
     const body = await getPostData(req);
@@ -68,6 +87,13 @@ const createPerson = async (req, res) => {
   }
 };
 
+/**
+ * Update an exisiting person by id
+ * @param {any} req
+ * @param {any} res
+ * @param {string | number} id
+ * @returns {void}
+ */
 const updatePerson = async (req, res, id) => {
   try {
     const person = await Person.findById(id);
@@ -102,6 +128,13 @@ const updatePerson = async (req, res, id) => {
   }
 };
 
+/**
+ * Remove an exisiting person by id
+ * @param {any} req
+ * @param {any} res
+ * @param {string | number} id
+ * @returns {void}
+ */
 const removePerson = async (req, res, id) => {
   try {
     const person = await Person.findById(id);

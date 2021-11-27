@@ -1,6 +1,12 @@
 const fs = require('fs');
 const { REQUIRED_PROPERTIES } = require('../constants');
 
+/**
+ * Write data to a file which is an artificial database
+ * @param {string} filename
+ * @param {any} data
+ * @returns {void}
+ */
 const writeDataToFile = (filename, data) => {
   if (fs.existsSync(filename)) {
     fs.writeFileSync(filename, JSON.stringify(data), 'utf-8', (error) => {
@@ -14,6 +20,11 @@ const writeDataToFile = (filename, data) => {
   }
 };
 
+/**
+ * Get requested body
+ * @param {any} req
+ * @returns {void}
+ */
 const getPostData = (req) => {
   return new Promise((resolve, reject) => {
     try {
@@ -31,16 +42,34 @@ const getPostData = (req) => {
   });
 };
 
+/**
+ * Method to handle server error
+ * @param {any} res
+ * @param {any} error
+ * @returns {void}
+ */
 const handleServerError = (res, error) => {
   res.writeHead(500, 'Content-Type', 'application/json');
   res.end(JSON.stringify({message: error.message}));
 };
 
+/**
+ * Method to handle server error
+ * @param {number} statusCode
+ * @param {any} res
+ * @param {string} errorMessage
+ * @returns {void}
+ */
 const handleClientError = (statusCode, res, errorMessage) => {
-  res.writeHead(404, 'Content-Type', 'application/json');
+  res.writeHead(statusCode, 'Content-Type', 'application/json');
   res.end(JSON.stringify({message: errorMessage}));
 };
 
+/**
+ * Filter necessary properties
+ * @param {any} body
+ * @returns {any}
+ */
 const filterNecessaryProperties = (body) => {
   const requiredPropNames = Object.keys(REQUIRED_PROPERTIES);
   return Object.keys(body).reduce((acc, item) => {
@@ -51,6 +80,11 @@ const filterNecessaryProperties = (body) => {
   }, {});
 };
 
+/**
+ * Check required properties
+ * @param {any} body
+ * @returns {boolean | string}
+ */
 const checkRequiredProperties = (body) => {
   const bodyKeys = Object.keys(body);
   const requiredPropNames = Object.keys(REQUIRED_PROPERTIES);
@@ -78,6 +112,11 @@ const checkRequiredProperties = (body) => {
   };
 };
 
+/**
+ * Check properties types
+ * @param {any} body
+ * @returns {boolean | string}
+ */
 const checkPropertiesTypes = (body) => {
   const bodyEntries = Object.entries(body);
   const result = bodyEntries.reduce((acc, [key, value]) => {

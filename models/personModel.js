@@ -2,12 +2,21 @@ const { v4: uuidv4 } = require('uuid');
 const PERSONS = require('../data/index.json');
 const { writeDataToFile } = require('../utils.js');
 
+/**
+ * Find all items
+ * @returns {Promise}
+ */
 const findAll = () => {
   return new Promise((resolve, reject) => {
     resolve(PERSONS);
   })
 };
 
+/**
+ * Find item by id
+ * @param {string | number}
+ * @returns {Promise}
+ */
 const findById = (id) => {
   return new Promise((resolve, reject) => {
     const person = PERSONS
@@ -16,6 +25,11 @@ const findById = (id) => {
   })
 };
 
+/**
+ * Create a new item
+ * @param {any} person
+ * @returns {Promise}
+ */
 const create = (person) => {
   return new Promise((resolve, reject) => {
     const newPerson = {id: uuidv4(), ...person};
@@ -25,6 +39,12 @@ const create = (person) => {
   })
 };
 
+/**
+ * Update an exisiting item
+ * @param {any} data
+ * @param {string | number} id
+ * @returns {Promise}
+ */
 const update = (data, id) => {
   return new Promise((resolve, reject) => {
     const index = PERSONS
@@ -35,6 +55,11 @@ const update = (data, id) => {
   })
 };
 
+/**
+ * Remove an exisiting item by id
+ * @param {string | number} id
+ * @returns {Promise}
+ */
 const removeById = (id) => {
   return new Promise((resolve, reject) => {
     const updatedPersonsData = PERSONS
