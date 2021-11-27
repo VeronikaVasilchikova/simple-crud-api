@@ -64,7 +64,7 @@ const createPerson = async (req, res) => {
       const errorMessage = `Sorry, you missed required properties: ${checkRequiredProps}`;
       handleClientError(400, res, errorMessage);
     }
-    if (checkRequiredProps) {
+    else if (typeof checkRequiredProps === 'boolean' && checkRequiredProps) {
       const propertiesTypes = checkPropertiesTypes(filteredBody);
       if (typeof propertiesTypes === 'string') {
         handleClientError(400, res, `Sorry but ${propertiesTypes}`);
