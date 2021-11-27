@@ -4,7 +4,7 @@ const { getPostData,
   handleClientError,
   filterNecessaryProperties,
   checkRequiredProperties,
-  checkPropertiesTypes } = require('../utils.js');
+  checkPropertiesTypes } = require('../utils');
 
 /**
  * Get list of exisiting persons
@@ -67,8 +67,7 @@ const createPerson = async (req, res) => {
     if (checkRequiredProps) {
       const propertiesTypes = checkPropertiesTypes(filteredBody);
       if (typeof propertiesTypes === 'string') {
-        const errorMessage = `Sorry but ${propertiesTypes}`;
-        handleClientError(400, res, errorMessage);
+        handleClientError(400, res, `Sorry but ${propertiesTypes}`);
       }
       else {
         const person = {
@@ -118,7 +117,7 @@ const updatePerson = async (req, res, id) => {
           hobbies: hobbies || person.hobbies
         };
         const personToUpdate = await Person.update(personDataToUpdate, id);
-        res.writeHead(201, 'Content-Type', 'application/json');
+        res.writeHead(200, 'Content-Type', 'application/json');
         return res.end(JSON.stringify(personToUpdate));
       }
     }
@@ -140,8 +139,8 @@ const removePerson = async (req, res, id) => {
     const person = await Person.findById(id);
     if (person) {
       await Person.removeById(id);
-      res.writeHead(200, 'Content-Type', 'application/json');
-      res.end(JSON.stringify({message: `Person with id ${id} has been removed successfully!`}));
+      res.writeHead(204, 'Content-Type', 'application/json');
+      res.end();
     }
     else {
       const errorMessage = `Sorry, person with id=${id} not found`;

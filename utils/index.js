@@ -1,5 +1,6 @@
 const fs = require('fs');
-const { REQUIRED_PROPERTIES } = require('../constants');
+const { REQUIRED_PROPERTIES, PARAMS_RULES } = require('../constants');
+const params = new RegExp(PARAMS_RULES);
 
 /**
  * Write data to a file which is an artificial database
@@ -156,6 +157,24 @@ const checkPropertiesTypes = (body) => {
   };
 };
 
+const validateId = (req, res, method) => {
+  const urlArray = req.url.split('/person/');
+  if (urlArray[0] === '' && urlArray.length === 2) {
+    const personId = urlArray[1];
+    if (params.test(personId)) {
+      method(req, res, personId);
+    }
+    else {
+      const errorMessage = `Sorry, id ${personId} is invalid`;
+      handleClientError(400, res, errorMessage);
+    }
+  }
+  else {
+    const errorMessage = `Sorry, requested route ${req.url} not found`;
+    handleClientError(404, res, errorMessage);
+  }
+};
+
 module.exports = {
   writeDataToFile,
   getPostData,
@@ -163,5 +182,6 @@ module.exports = {
   handleClientError,
   filterNecessaryProperties,
   checkRequiredProperties,
-  checkPropertiesTypes
+  checkPropertiesTypes,
+  validateId
 };

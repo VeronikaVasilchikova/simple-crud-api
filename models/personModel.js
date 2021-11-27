@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const PERSONS = require('../data/index.json');
-const { writeDataToFile } = require('../utils.js');
+const { writeDataToFile } = require('../utils');
 
 /**
  * Find all items
