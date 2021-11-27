@@ -34,7 +34,7 @@ const create = (person) => {
   return new Promise((resolve, reject) => {
     const newPerson = {id: uuidv4(), ...person};
     PERSONS.push(newPerson);
-    writeDataToFile('./data/index.json', PERSONS);
+    writeDataToFile('data/index.json', PERSONS);
     resolve(newPerson);
   })
 };
@@ -50,7 +50,7 @@ const update = (data, id) => {
     const index = PERSONS
       .findIndex(item => item.id.toString() === id.toString());
     PERSONS[index] = {id, ...data};
-    writeDataToFile('./data/index.json', PERSONS);
+    writeDataToFile('data/index.json', PERSONS);
     resolve(PERSONS[index]);
   })
 };
@@ -64,7 +64,7 @@ const removeById = (id) => {
   return new Promise((resolve, reject) => {
     const updatedPersonsData = PERSONS
       .filter(item => item.id.toString() !== id.toString());
-    writeDataToFile('./data/index.json', updatedPersonsData);
+    writeDataToFile('data/index.json', updatedPersonsData);
     resolve();
   })
 };

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const { REQUIRED_PROPERTIES, PARAMS_RULES } = require('../constants');
 const params = new RegExp(PARAMS_RULES);
 
@@ -9,15 +10,28 @@ const params = new RegExp(PARAMS_RULES);
  * @returns {void}
  */
 const writeDataToFile = (filename, data) => {
-  if (fs.existsSync(filename)) {
-    fs.writeFileSync(filename, JSON.stringify(data), 'utf-8', (error) => {
+  let dirName;
+  if (process.argv[2] === 'development') {
+    const distNameArray = __dirname.split('\\');
+    distNameArray.pop();
+    dirName = distNameArray.join('\\');
+  }
+  else if (process.argv[2] === 'production') {
+    dirName = __dirname;
+  }
+  else {
+    throw new Error(`Have no access to ${filename}`);
+  }
+  const filePath = path.resolve(dirName, filename);
+  if (fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, JSON.stringify(data), 'utf-8', (error) => {
       if (error) {
         throw new Error(`${error}`);
       }
     });
   }
   else {
-    throw new Error(`Have no access to ${filename}`);
+    throw new Error(`Have no access to ${filePath}`);
   }
 };
 
