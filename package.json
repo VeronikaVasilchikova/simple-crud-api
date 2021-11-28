@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "start:prod": "webpack && node build/server production",
-    "start:dev": "nodemon src/server development"
+    "start:dev": "nodemon src/index development"
   },
   "repository": {
     "type": "git",

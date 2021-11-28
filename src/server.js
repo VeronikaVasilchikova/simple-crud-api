@@ -6,7 +6,6 @@ const {
   methodPut,
   methodDelete
 } = require('./routes');
-const { PORT = 3000, HOST = 'localhost'} = process.env;
 
 const server = http.createServer((req, res) => {
   switch(req.method) {
